@@ -51,7 +51,7 @@
         <!-- Guardar / Editar Cita -->
         <v-dialog @keydown.esc="closeDialog" persistent @click:outside="closeDialog" v-model="dialog" >
             <v-card>
-                <v-card-title class="headline green white--text" dark primary-title>Guardar / Editar Cita - {{tipo}}</v-card-title>
+                <v-card-title class="headline green white--text" dark primary-title>Guardar / Editar Cita</v-card-title>
                 <v-card-text class="px-3 py-3">
                     <loader v-if="isloading"></loader>
                     <v-card outlined class="pl-5" >

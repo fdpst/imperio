@@ -169,9 +169,9 @@
                     let start = moment(`${dia_actual} ${element.entrada}`, 'YYYY-MM-DD HH:mm')
                     let end = moment(`${dia_actual} ${element.salida}`, 'YYYY-MM-DD HH:mm')
                     let diff = end.diff(start, 'minutes')
-                    let intervalos = _.range((diff / 30))
+                    let intervalos = _.range((diff / 15))
                     intervalos.forEach((element, index) => {
-                        let n = start.clone().add(index * 30, 'minutes').format('YYYY-MM-DD_HH:mm')
+                        let n = start.clone().add(index * 15, 'minutes').format('YYYY-MM-DD_HH:mm')
                         let ref = `${this.empleado.nombre}_${n}`;
                         (this.local_intervalos[ref] = this.local_intervalos[ref] || []).push(ref)
                     })
@@ -209,7 +209,7 @@
                     return {
                         display: 'block',
                         top: `${this.$refs[ref_name][0].offsetTop}px`,
-                        height: `${(cita.duracion / 30) * this.interval_height}px`,
+                        height: `${(cita.duracion / 15) * this.interval_height}px`,
                         backgroundColor: cita.color
                     }
                 }
@@ -218,7 +218,7 @@
                 }
             },
             minutesToPixels(duracion) {
-                return (duracion / 30) * this.interval_height
+                return (duracion / 15) * this.interval_height
             },
             getcolor() {
                 return `#${(Math.random()*0xFFFFFF<<0).toString(16)}`

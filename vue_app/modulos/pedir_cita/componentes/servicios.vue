@@ -75,9 +75,12 @@ export default {
     return {
       radioGroup: [],
       isActive: false,
-      tienda: null,
+      tienda: 1,
     }
   },
+  mounted() {
+      this.$emit('getData', this.tienda);
+    },
   methods:
   {
     changeTienda()

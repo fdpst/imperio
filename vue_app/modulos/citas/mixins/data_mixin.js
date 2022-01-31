@@ -23,19 +23,10 @@ export const data_mixin = {
     },
 
     getData(nombre_tipo, tienda_id){
-      console.log("GETDATA")
-      console.log(nombre_tipo)
-      console.log(tienda_id)
       axios.get(`api/app/getdata/${nombre_tipo}/${tienda_id}`).then(res => {
         this.empleados = res.data.empleados
-        console.log("EMPLEADOS")
-        console.log(this.empleados)
         this.servicios = res.data.servicios
-        console.log("SERVICIOS")
-      console.log(this.servicios)
         this.clientes = res.data.clientes
-        console.log("CLIENTES")
-      console.log(this.clientes)
         this.agregarCitas(this.dia_actual)
         this.overlay = false;
         

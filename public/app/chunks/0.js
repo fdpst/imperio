@@ -282,10 +282,10 @@ __webpack_require__.r(__webpack_exports__);
       var end = moment("2021-03-26 ".concat(this.salida), 'YYYY-MM-DD HH:mm');
       var diff = end.diff(start, 'minutes');
 
-      var intervalos = _.range(diff / 30);
+      var intervalos = _.range(diff / 15);
 
       this.intervalos = intervalos.map(function (element, index) {
-        return start.clone().add(index * 30, 'minutes').format('HH:mm');
+        return start.clone().add(index * 15, 'minutes').format('HH:mm');
       });
     },
     resetClientes: function resetClientes() {
@@ -555,10 +555,10 @@ __webpack_require__.r(__webpack_exports__);
         var end = moment("".concat(dia_actual, " ").concat(element.salida), 'YYYY-MM-DD HH:mm');
         var diff = end.diff(start, 'minutes');
 
-        var intervalos = _.range(diff / 30);
+        var intervalos = _.range(diff / 15);
 
         intervalos.forEach(function (element, index) {
-          var n = start.clone().add(index * 30, 'minutes').format('YYYY-MM-DD_HH:mm');
+          var n = start.clone().add(index * 15, 'minutes').format('YYYY-MM-DD_HH:mm');
           var ref = "".concat(_this.empleado.nombre, "_").concat(n);
           (_this.local_intervalos[ref] = _this.local_intervalos[ref] || []).push(ref);
         });
@@ -598,7 +598,7 @@ __webpack_require__.r(__webpack_exports__);
         return {
           display: 'block',
           top: "".concat(this.$refs[ref_name][0].offsetTop, "px"),
-          height: "".concat(cita.duracion / 30 * this.interval_height, "px"),
+          height: "".concat(cita.duracion / 15 * this.interval_height, "px"),
           backgroundColor: cita.color
         };
       }
@@ -608,7 +608,7 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     minutesToPixels: function minutesToPixels(duracion) {
-      return duracion / 30 * this.interval_height;
+      return duracion / 15 * this.interval_height;
     },
     getcolor: function getcolor() {
       return "#".concat((Math.random() * 0xFFFFFF << 0).toString(16));
@@ -2691,7 +2691,7 @@ var render = function() {
                   staticClass: "headline green white--text",
                   attrs: { dark: "", "primary-title": "" }
                 },
-                [_vm._v("Guardar / Editar Cita - " + _vm._s(_vm.tipo))]
+                [_vm._v("Guardar / Editar Cita")]
               ),
               _vm._v(" "),
               _c(
@@ -4560,19 +4560,10 @@ var data_mixin = {
     getData: function getData(nombre_tipo, tienda_id) {
       var _this2 = this;
 
-      console.log("GETDATA");
-      console.log(nombre_tipo);
-      console.log(tienda_id);
       axios.get("api/app/getdata/".concat(nombre_tipo, "/").concat(tienda_id)).then(function (res) {
         _this2.empleados = res.data.empleados;
-        console.log("EMPLEADOS");
-        console.log(_this2.empleados);
         _this2.servicios = res.data.servicios;
-        console.log("SERVICIOS");
-        console.log(_this2.servicios);
         _this2.clientes = res.data.clientes;
-        console.log("CLIENTES");
-        console.log(_this2.clientes);
 
         _this2.agregarCitas(_this2.dia_actual);
 

@@ -53,7 +53,7 @@ class EventAppController extends Controller
         $q->where('app_tienda_id', $tienda_id);
     })->get();
     $clientes = Cliente::get();//AppUsuario::get();
-    $servicios = AppServicio::where('tipo_id', $tipo->id)->get(['id','nombre', 'duracion', 'precio']);
+    $servicios = AppServicio::get(['id','nombre', 'duracion', 'precio']);
     return response()->json([
       'clientes'  => $clientes,
       'empleados' => $empleados,

@@ -48,8 +48,8 @@
         data() {
             return {
                 is_multiple: false,
-                number_to: 30,
-                lista_duracion: [30, 45, 60, 75, 90, 105, 120],
+                number_to: 15,
+                lista_duracion: [15, 30, 45, 60, 75, 90, 105, 120],
                 servicio: { "nombre":'',"precio":0,"duracion":0 },
                 servicionombre: null,
                 servicioprecio: null,

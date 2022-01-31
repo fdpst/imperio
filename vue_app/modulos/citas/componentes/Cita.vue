@@ -274,9 +274,9 @@
                 let start = moment(`2021-03-26 ${this.entrada}`, 'YYYY-MM-DD HH:mm')
                 let end = moment(`2021-03-26 ${this.salida}`, 'YYYY-MM-DD HH:mm')
                 let diff = end.diff(start, 'minutes')
-                let intervalos = _.range(diff / 30)
+                let intervalos = _.range(diff / 15)
                 this.intervalos = intervalos.map((element, index) => {
-                    return start.clone().add(index * 30, 'minutes').format('HH:mm')
+                    return start.clone().add(index * 15, 'minutes').format('HH:mm')
                 })
             },  
             resetClientes(){
