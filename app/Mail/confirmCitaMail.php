@@ -30,6 +30,6 @@ class confirmCitaMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Nueva Cita en Imperio Varón')->view('mails.confirmar_cita');
+        return $this->subject('Confirmación de Cita en Imperio Varón')->view('mails.confirmar_cita');
     }
 }

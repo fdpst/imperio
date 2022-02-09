@@ -572,7 +572,10 @@ class EventAppController extends Controller
     $cita['nombre_empleado'] = $empleado->nombre;
     $cita['nombre_tienda'] = $tienda->nombre;
     $cita['nombre_cliente'] = $cliente->nombre;
+    // Mail para el cliente
     Mail::to($cliente->email)->send(new confirmCitaMail($cita));
+    // Mail para el administrador
+    $admin_mail='info@imperiovaron.com';
+    Mail::to($admin_mail)->send(new confirmCitaAdminMail($cita));;
   }
-
 }

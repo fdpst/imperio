@@ -1,4 +1,5 @@
 <pre>
+<img src="{{Request::root()}}/logo.png" alt="LOGOTIPO" height="200">
 
 <h1 style="text-transform: uppercase;"><strong>¡Hola!  </strong>{{$data['nombre_cliente']}}</h1>
 
@@ -19,7 +20,6 @@ Ha sido creada correctamente
 @foreach($data['servicios'] as $servicio)
     {{$servicio['nombre']}} <br>
 @endforeach
-
 
 Gracias!!!
 
