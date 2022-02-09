@@ -1,7 +1,6 @@
 <pre>
-<img src="{{Request::root()}}/logo.png" alt="LOGOTIPO" height="200">
 
-<h1 style="text-transform: uppercase;"><strong>Hola!  </strong>{{$data['nombre_cliente']}}</h1>
+<h1 style="text-transform: uppercase;"><strong>¡Hola!  </strong>{{$data['nombre_cliente']}}</h1>
 
 <strong style="color: black;text-transform: uppercase;">Su cita para: </strong>
 <strong style="color: orange;">{{$data['nombre_tienda']}}</strong> 
@@ -18,11 +17,11 @@ Ha sido creada correctamente
 <strong style="color: black;text-transform: uppercase;">Servicios solicitados:</strong>
 
 @foreach($data['servicios'] as $servicio)
-    {{$servicio['nombre']}} : {{$servicio['precio']}} € <br>
+    {{$servicio['nombre']}} <br>
 @endforeach
-<strong style="color: black;">Total: </strong>{{$data['precio']}} €
+
 
 Gracias!!!
 
-FidiasPRO
+Imperio Varón
 </pre>

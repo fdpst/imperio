@@ -108,7 +108,7 @@ class PruebaDisponible extends Controller
       $diff = $collection->diff($lista_minutos_ocupados);
 
       if ($vacaciones){
-        $diff = ["00:00", "00:00"];
+        $diff = null;//["12:00", "12:00"];
       }else{
         $diff =  $diff->flatten();
       }
@@ -134,10 +134,10 @@ class PruebaDisponible extends Controller
 
       $diferencia_por_dia = $entrada->diffInMinutes($salida);
 
-      $intervalos = ($diferencia_por_dia / 30) - 1;
+      $intervalos = ($diferencia_por_dia / 15) - 1;
 
       foreach (range(0, $intervalos) as $numero) {
-        $i = $numero * 30;
+        $i = $numero * 15;
         $hora_disponible = $entrada->copy()->addMinutes($i)->format('H:i');
         array_push($lista_minutos_totales, $hora_disponible);
       }
@@ -155,10 +155,10 @@ class PruebaDisponible extends Controller
 
       $diferencia_por_dia = $entrada->diffInMinutes($salida);
 
-      $intervalos = ($diferencia_por_dia - 30) / 30;
+      $intervalos = ($diferencia_por_dia - 15) / 15;
 
       foreach (range(0, $intervalos) as $numero) {
-        $i = $numero * 30;
+        $i = $numero * 15;
         $hora_disponible = $entrada->copy()->addMinutes($i)->format('H:i');
         array_push($lista_minutos_totales, $hora_disponible);
       }

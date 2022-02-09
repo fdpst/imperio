@@ -1,6 +1,15 @@
 window._ = require('lodash')
 window.Vue = require('vue')
 
+window.moment = require('moment')
+
+moment.updateLocale('en', {
+    weekdays : 
+	[
+        "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"
+    ]	
+});
+
 import VuetifyToast from 'vuetify-toast-snackbar-ng'
 
 import setup from './interceptors/interceptors.js'

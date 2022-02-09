@@ -82,8 +82,8 @@
                     <v-divider></v-divider>
                     <div class="mt-2 mx-4 d-flex justify-space-between align-center">
                       <div>
-                        <p class="text-caption"> Total:</p>
-                        <h4 class="red--text text--lighten-2 text-h5">{{total.toFixed(2)}} <v-icon class="red--text text--lighten-2">mdi-currency-eur</v-icon></h4>
+                        <!--<p class="text-caption"> Total:</p>
+                        <h4 class="red--text text--lighten-2 text-h5">{{total.toFixed(2)}} <v-icon class="red--text text--lighten-2">mdi-currency-eur</v-icon></h4>-->
                       </div>
                       <v-btn
                         :disabled="total <= 0"
@@ -168,7 +168,6 @@ import FormCliente from '../componentes/formCliente'
     methods: {
       sendData(){
       
-        console.log(this.formData)
       },
       getEmpleado(empleado_id) {
         axios.get(`api/getempleado/${empleado_id}`).then(res => {
@@ -244,8 +243,8 @@ import FormCliente from '../componentes/formCliente'
           this.clientes = res.data.clientes
           this.servicios = res.data.servicios
           this.horas_disponibles = res.data.horas_disponibles
-          // this.setIntervals()
-          // this.disabledHours(this.weekday)
+          console.log("EMPLEADOS")
+          //console.log(this.n_empleados)
         }, res => {
             this.$toast.error('Algo ha salido mal')
         })

@@ -182,8 +182,8 @@
         if (this.filtrohoras == true){
             lista_horas.forEach((element, index, self_array) => {
                 let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
-                let intervalos = _.range((duracion / 30) + 2).map(x => (x + 1) * 30)
-                let intervalos_completos = [-60, -30, 0, ...intervalos]
+                let intervalos = _.range((duracion / 15) + 2).map(x => (x + 1) * 15)
+                let intervalos_completos = [-60, -45, -30, -15, 0, ...intervalos]
                 let horas = intervalos_completos.map(x => {
                     return start.clone().add(x, 'minutes').format('HH:mm')
                 })
@@ -200,20 +200,25 @@
                 }
             })
         }else{
-            lista_horas.forEach((element, index, self_array) => {
-                let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
-                let intervalos = _.range((duracion / 30) + 2).map(x => (x + 1) * 30)
-                let intervalos_completos = [-60, -30, 0, ...intervalos]
-                let horas = intervalos_completos.map(x => {
-                    return start.clone().add(x, 'minutes').format('HH:mm')
-                })                       
-                let eliminar_inicio = _.drop(horas, 2)
-                let intervalo_real = _.dropRight(eliminar_inicio, 3)
-                let encaja = _.difference(intervalo_real, self_array).length === 0                                               
-                if (encaja) {
-                    lista.push(element)
-                }
-            })
+            if(lista_horas != null){
+              lista_horas.forEach((element, index, self_array) => {
+                  let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
+                  let intervalos = _.range((duracion / 15) + 2).map(x => (x + 1) * 15)
+                  let intervalos_completos = [-60, -30, 0, ...intervalos]
+                  let horas = intervalos_completos.map(x => {
+                      return start.clone().add(x, 'minutes').format('HH:mm')
+                  })        
+                              
+                  let eliminar_inicio = _.drop(horas, 2)
+                  let intervalo_real = _.dropRight(eliminar_inicio, 3)
+                  let encaja = _.difference(intervalo_real, self_array).length === 0                                               
+                  if (encaja) {
+                      lista.push(element)
+                  }
+              })
+            }else{
+              
+            }
         }              
         return lista
       },
