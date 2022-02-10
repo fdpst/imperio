@@ -23,6 +23,7 @@ use App\Models\DataMail;
 use Illuminate\Http\Request;
 use App\Mail\NewPetDateMail;
 use App\Mail\confirmCitaMail;
+use App\Mail\confirmCitaAdminMail;
 use Carbon\Carbon;
 use App\Http\Controllers\ApiControllers\TicketApiController;
 use Mail;
@@ -574,6 +575,7 @@ class EventAppController extends Controller
     $cita['nombre_cliente'] = $cliente->nombre;
     // Mail para el cliente
     Mail::to($cliente->email)->send(new confirmCitaMail($cita));
+    
     // Mail para el administrador
     $admin_mail='info@imperiovaron.com';
     Mail::to($admin_mail)->send(new confirmCitaAdminMail($cita));;

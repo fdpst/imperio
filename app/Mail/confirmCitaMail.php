@@ -22,7 +22,6 @@ class confirmCitaMail extends Mailable
     {
         $this->data = $data;
     }
-
     /**
      * Build the message.
      *

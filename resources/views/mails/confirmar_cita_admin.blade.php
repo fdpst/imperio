@@ -24,5 +24,4 @@
 <strong style="color: black;">Total: </strong>{{$data['precio']}} €
 
 Gracias!!!
-
 </pre>
