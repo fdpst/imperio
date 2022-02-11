@@ -19,9 +19,6 @@
 <strong style="color: black;text-transform: uppercase;">Servicios solicitados:</strong>
 
 @foreach($data['servicios'] as $servicio)
-    {{$servicio['nombre']}} : {{$servicio['precio']}} € <br>
+    {{$servicio['nombre']}}<br>
 @endforeach
-<strong style="color: black;">Total: </strong>{{$data['precio']}} €
-
-Gracias!!!
 </pre>
