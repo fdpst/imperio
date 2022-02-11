@@ -85,7 +85,7 @@
             dayComponent
         },
         data: () => ({
-            tienda: null,
+            tienda: 1,
             tiendas: [],
             month_event_style: {
                 height: '20px',

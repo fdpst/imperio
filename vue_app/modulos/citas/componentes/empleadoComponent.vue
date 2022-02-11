@@ -15,7 +15,10 @@
         <!-- seccion de la cita de la mascota del color del empleado que tiene el servicio asignado -->
         <div @click="setCita(cita)" v-for="cita in local_citas" :key="cita.id" :style="[timeToY(cita)]" class="cita-element">
              <v-icon v-if="!cita.confirmada" small color="white">mdi-alert-circle</v-icon>
-            <i style="text-transform:capitalize;">{{cita.usuario}} - {{cita.telefono}}</i>
+            <i style="text-transform:capitalize;">{{cita.usuario}}</i>
+            <div v-for="(item, index) in cita.servicios" :key="index">
+                <i style="text-transform:capitalize;">{{cita.servicios[index].nombre}}</i>
+            </div>
         </div>      
     </div>    
 </template>
@@ -64,105 +67,6 @@
             }
         },
         methods: {
-
-            // crearIntervalos(n, dia_actual) {         
-            //     let intervalos = n.forEach(habitual => {
-            //             // Comprobamos los intervalos de horario de los trabajadores para verificar 
-            //             // su horario habitual, horario especifico y sus vacaciones
-            //             // inicializamos las variable de entrada y salida
-            //             let start = '';
-            //             let end = '';
-            //             // Comprobamos si el empleado tiene un horario especifico ( variable fecha del array en crearIntervalos(n, dia_actual)) 
-            //             // si no tiene horario especifico asignamos la entrada y salida de este dia actual ( habitual )
-            //             // y verificamos que el id del horario del empleado sea de la tienda seleccionada
-            //                 if (this.empleado.fecha.length == 0) 
-            //                 {
-            //                     start = moment(`${dia_actual} ${habitual.entrada}`, 'YYYY-MM-DD HH:mm')
-            //                     end = moment(`${dia_actual} ${habitual.salida}`, 'YYYY-MM-DD HH:mm')
-            //                 }
-            //                 // si tiene horario especifico asignamos la entrada y salida de este dia actual ( especifico ) 
-            //                 else
-            //                 {
-            //                     // para evitar la entrada en todos los dias especificos y que muestre de manera erroneo el horario
-            //                     //  creamos una variable flag para marcar la entrada
-            //                     let diapintado = false;
-            //                     //  recorremos el horario especifico y asignamos la entrada y salida de este dia especifico
-            //                     this.empleado.fecha.forEach(especifico => {
-            //                         // Seteamos en variables la fecha especifica del dia recorrido y la fecha actual para realizar la comprobacion
-            //                         let fecha = moment(`${especifico.fecha}`, 'YYYY-MM-DD HH:mm');
-            //                         let actual = moment(`${dia_actual}`, 'YYYY-MM-DD HH:mm');
-            //                         // Verificamos que sean iguales para asignar la entrada y salida
-            //                         if (this.app_tienda_id == especifico.app_tienda_id)
-            //                         {
-            //                             if (JSON.stringify(fecha) == JSON.stringify(actual))
-            //                             {
-            //                                 start = moment(`${dia_actual} ${especifico.entrada}`, 'YYYY-MM-DD HH:mm')
-            //                                 end = moment(`${dia_actual} ${especifico.salida}`, 'YYYY-MM-DD HH:mm')
-            //                                 // Si los dias coinciden marcamos el flag como true para no realice mas comprobaciones y marque mal el horario
-            //                                 diapintado = true;
-            //                             }
-            //                             else
-            //                             {                     
-            //                                 // Si los dias no coinciden marcamos el flag y el horario como habitual
-            //                                 if (diapintado == false) {
-            //                                     start = moment(`${dia_actual} ${habitual.entrada}`, 'YYYY-MM-DD HH:mm')
-            //                                     end = moment(`${dia_actual} ${habitual.salida}`, 'YYYY-MM-DD HH:mm')
-            //                                 }                                   
-            //                             }
-            //                         }
-            //                         else
-            //                         {
-            //                         // En caso de que trabaje en otra localizacion diferente a la habitual marcara el dia como no habil
-            //                             if (JSON.stringify(fecha) == JSON.stringify(actual) && diapintado == false) {
-            //                                 let hora = '00:00';
-            //                                 start = moment(`${dia_actual} ${hora}`, 'YYYY-MM-DD HH:mm');
-            //                                 end = moment(`${dia_actual} ${hora}`, 'YYYY-MM-DD HH:mm');
-            //                                 diapintado = true;
-            //                             }
-            //                         }
-            //                     })
-            //                 }
-
-            //                 // Comprobamos si el empleado tiene vacaciones ( variable fecha del array en crearIntervalos(n, dia_actual)) 
-            //                 // si no tiene vacaciones asignamos la entrada y salida de este dia actual ( habitual )
-            //                 if (this.empleado.vacaciones.length == 0) 
-            //                 {
-            //                     start = moment(`${dia_actual} ${habitual.entrada}`, 'YYYY-MM-DD HH:mm')
-            //                     end = moment(`${dia_actual} ${habitual.salida}`, 'YYYY-MM-DD HH:mm')
-            //                 }
-            //                 // si tiene vacaciones asignamos la entrada y salida de este dia actual ( vacaciones ) 
-            //                 else
-            //                 {
-            //                     // para evitar la entrada en todos los dias de vacaciones y que muestre de manera erroneo el horario
-            //                     //  creamos una variable flag para marcar la entrada
-            //                     let diavacaciones = false;
-            //                     //  recorremos el horario vacaciones y asignamos la entrada y salida de este dia vacaciones
-            //                     this.empleado.vacaciones.forEach(vacaciones => {
-            //                         // Seteamos en variables la fecha especifica del dia recorrido y la fecha actual para realizar la comprobacion
-            //                         let fechavacaciones = moment(`${vacaciones.fecha}`, 'YYYY-MM-DD HH:mm');
-            //                         let actual = moment(`${dia_actual}`, 'YYYY-MM-DD HH:mm');
-            //                         // Verificamos que sean iguales para asignar la entrada y salida
-            //                         if (JSON.stringify(fechavacaciones) == JSON.stringify(actual))
-            //                         {
-            //                             let hora = '00:00';
-            //                             start = moment(`${dia_actual} ${hora}`, 'YYYY-MM-DD HH:mm')
-            //                             end = moment(`${dia_actual} ${hora}`, 'YYYY-MM-DD HH:mm')
-            //                             // Si los dias coinciden marcamos el flag como true para no realice mas comprobaciones y marque mal el horario
-            //                             diavacaciones = true;
-            //                         }
-            //                     })
-            //                 }  
-            //             // Despues de asignar la entrada y salida diaria del trabajador en cualquiera de los horarios 
-            //             // horario habitual, horario especifico y/o vacaciones asignamos cada seccion de 30 minutos al empleado para citas
-            //             let diff = end.diff(start, 'minutes')
-            //             let intervalos = _.range((diff / 30))
-            //             intervalos.forEach((element, index) => {
-            //                 let n = start.clone().add(index * 30, 'minutes').format('YYYY-MM-DD_HH:mm')
-            //                 let ref = `${this.empleado.nombre}_${n}`;
-            //                 (this.local_intervalos[ref] = this.local_intervalos[ref] || []).push(ref)
-            //             })
-            //     })
-            // },
 
             crearIntervalos(n, dia_actual) {
                  let intervalos = n.forEach(element => {

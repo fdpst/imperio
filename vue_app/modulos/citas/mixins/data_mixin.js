@@ -1,7 +1,7 @@
 export const data_mixin = {
   data(){
     return {
-      tienda: 8,
+      tienda: 1,
 
       tiendas:[],
 

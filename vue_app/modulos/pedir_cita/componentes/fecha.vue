@@ -178,56 +178,36 @@
       },
       filtrar_90_minutos(lista_horas, duracion) { // saca listado de horario disponible por empleado
         let lista = []
-        //Si tiene el filtro de horas activo aplica el filtro de los 30 minutos, si lo tiene desactivado no tendrá en cuenta los 30 minutos
-        if (this.filtrohoras == true){
+          if (lista_horas){
             lista_horas.forEach((element, index, self_array) => {
+        
                 let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
-                let intervalos = _.range((duracion / 15) + 2).map(x => (x + 1) * 15)
-                let intervalos_completos = [-60, -45, -30, -15, 0, ...intervalos]
+                let num_inter = duracion/15;
+                let intervalos = _.range((duracion / 15)).map(x => (x + 1) * 15)
+                let intervalos_completos = [0, ...intervalos]
                 let horas = intervalos_completos.map(x => {
                     return start.clone().add(x, 'minutes').format('HH:mm')
                 })
-                let tiene_una_hora = self_array.includes(horas[0]) && self_array.includes(horas[1])
-                let no_tiene_nada = !self_array.includes(horas[1])
-                let tiene_una_hora_final = self_array.includes(horas[horas.length - 2]) && self_array.includes(horas[horas.length - 3])
-                let no_tiene_nada_final = !self_array.includes(horas[horas.length - 3])
-                let eliminar_inicio = _.drop(horas, 2)
-                let intervalo_real = _.dropRight(eliminar_inicio, 3)
-                let encaja = _.difference(intervalo_real, self_array).length === 0                        
-                
-                if ((tiene_una_hora || no_tiene_nada) && (tiene_una_hora_final || no_tiene_nada_final) && (encaja)) {
+                                  
+                let eliminar_inicio = _.dropRight(horas, 1)
+
+                let encaja = _.difference(eliminar_inicio, self_array).length === 0                                               
+
+                if (encaja) {
                     lista.push(element)
                 }
+            
             })
-        }else{
-            if(lista_horas != null){
-              lista_horas.forEach((element, index, self_array) => {
-                  let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
-                  let intervalos = _.range((duracion / 15) + 2).map(x => (x + 1) * 15)
-                  let intervalos_completos = [-60, -30, 0, ...intervalos]
-                  let horas = intervalos_completos.map(x => {
-                      return start.clone().add(x, 'minutes').format('HH:mm')
-                  })        
-                              
-                  let eliminar_inicio = _.drop(horas, 2)
-                  let intervalo_real = _.dropRight(eliminar_inicio, 3)
-                  let encaja = _.difference(intervalo_real, self_array).length === 0                                               
-                  if (encaja) {
-                      lista.push(element)
-                  }
-              })
-            }else{
-              
-            }
-        }              
-        return lista
+          }
+          
+          return lista
+        
       },
     },
     watch:
     {
       'empleados'(n) {
           this.local_empleados = JSON.parse(JSON.stringify(n))
-          console.log(this.local_empleados)
           this.local_empleados.unshift({ id: null,nombre: 'Todos Los empleados'})
       },
     },

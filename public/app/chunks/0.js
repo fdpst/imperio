@@ -140,6 +140,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.calendar_wrap.scrollLeft = e.target.scrollLeft;
     },
     getCitas: function getCitas(empleado, dia) {
+      console.log(this.map_citas["".concat(empleado.nombre, "_").concat(dia)]);
       return this.map_citas["".concat(empleado.nombre, "_").concat(dia)];
     },
     getHorario: function getHorario(empleado, dia) {
@@ -407,6 +408,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['intervalos', 'empleado', 'citas', 'horario', 'dia_actual', 'interval_height', 'fechas', 'type', 'app_tienda_id'],
@@ -450,103 +454,6 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    // crearIntervalos(n, dia_actual) {         
-    //     let intervalos = n.forEach(habitual => {
-    //             // Comprobamos los intervalos de horario de los trabajadores para verificar 
-    //             // su horario habitual, horario especifico y sus vacaciones
-    //             // inicializamos las variable de entrada y salida
-    //             let start = '';
-    //             let end = '';
-    //             // Comprobamos si el empleado tiene un horario especifico ( variable fecha del array en crearIntervalos(n, dia_actual)) 
-    //             // si no tiene horario especifico asignamos la entrada y salida de este dia actual ( habitual )
-    //             // y verificamos que el id del horario del empleado sea de la tienda seleccionada
-    //                 if (this.empleado.fecha.length == 0) 
-    //                 {
-    //                     start = moment(`${dia_actual} ${habitual.entrada}`, 'YYYY-MM-DD HH:mm')
-    //                     end = moment(`${dia_actual} ${habitual.salida}`, 'YYYY-MM-DD HH:mm')
-    //                 }
-    //                 // si tiene horario especifico asignamos la entrada y salida de este dia actual ( especifico ) 
-    //                 else
-    //                 {
-    //                     // para evitar la entrada en todos los dias especificos y que muestre de manera erroneo el horario
-    //                     //  creamos una variable flag para marcar la entrada
-    //                     let diapintado = false;
-    //                     //  recorremos el horario especifico y asignamos la entrada y salida de este dia especifico
-    //                     this.empleado.fecha.forEach(especifico => {
-    //                         // Seteamos en variables la fecha especifica del dia recorrido y la fecha actual para realizar la comprobacion
-    //                         let fecha = moment(`${especifico.fecha}`, 'YYYY-MM-DD HH:mm');
-    //                         let actual = moment(`${dia_actual}`, 'YYYY-MM-DD HH:mm');
-    //                         // Verificamos que sean iguales para asignar la entrada y salida
-    //                         if (this.app_tienda_id == especifico.app_tienda_id)
-    //                         {
-    //                             if (JSON.stringify(fecha) == JSON.stringify(actual))
-    //                             {
-    //                                 start = moment(`${dia_actual} ${especifico.entrada}`, 'YYYY-MM-DD HH:mm')
-    //                                 end = moment(`${dia_actual} ${especifico.salida}`, 'YYYY-MM-DD HH:mm')
-    //                                 // Si los dias coinciden marcamos el flag como true para no realice mas comprobaciones y marque mal el horario
-    //                                 diapintado = true;
-    //                             }
-    //                             else
-    //                             {                     
-    //                                 // Si los dias no coinciden marcamos el flag y el horario como habitual
-    //                                 if (diapintado == false) {
-    //                                     start = moment(`${dia_actual} ${habitual.entrada}`, 'YYYY-MM-DD HH:mm')
-    //                                     end = moment(`${dia_actual} ${habitual.salida}`, 'YYYY-MM-DD HH:mm')
-    //                                 }                                   
-    //                             }
-    //                         }
-    //                         else
-    //                         {
-    //                         // En caso de que trabaje en otra localizacion diferente a la habitual marcara el dia como no habil
-    //                             if (JSON.stringify(fecha) == JSON.stringify(actual) && diapintado == false) {
-    //                                 let hora = '00:00';
-    //                                 start = moment(`${dia_actual} ${hora}`, 'YYYY-MM-DD HH:mm');
-    //                                 end = moment(`${dia_actual} ${hora}`, 'YYYY-MM-DD HH:mm');
-    //                                 diapintado = true;
-    //                             }
-    //                         }
-    //                     })
-    //                 }
-    //                 // Comprobamos si el empleado tiene vacaciones ( variable fecha del array en crearIntervalos(n, dia_actual)) 
-    //                 // si no tiene vacaciones asignamos la entrada y salida de este dia actual ( habitual )
-    //                 if (this.empleado.vacaciones.length == 0) 
-    //                 {
-    //                     start = moment(`${dia_actual} ${habitual.entrada}`, 'YYYY-MM-DD HH:mm')
-    //                     end = moment(`${dia_actual} ${habitual.salida}`, 'YYYY-MM-DD HH:mm')
-    //                 }
-    //                 // si tiene vacaciones asignamos la entrada y salida de este dia actual ( vacaciones ) 
-    //                 else
-    //                 {
-    //                     // para evitar la entrada en todos los dias de vacaciones y que muestre de manera erroneo el horario
-    //                     //  creamos una variable flag para marcar la entrada
-    //                     let diavacaciones = false;
-    //                     //  recorremos el horario vacaciones y asignamos la entrada y salida de este dia vacaciones
-    //                     this.empleado.vacaciones.forEach(vacaciones => {
-    //                         // Seteamos en variables la fecha especifica del dia recorrido y la fecha actual para realizar la comprobacion
-    //                         let fechavacaciones = moment(`${vacaciones.fecha}`, 'YYYY-MM-DD HH:mm');
-    //                         let actual = moment(`${dia_actual}`, 'YYYY-MM-DD HH:mm');
-    //                         // Verificamos que sean iguales para asignar la entrada y salida
-    //                         if (JSON.stringify(fechavacaciones) == JSON.stringify(actual))
-    //                         {
-    //                             let hora = '00:00';
-    //                             start = moment(`${dia_actual} ${hora}`, 'YYYY-MM-DD HH:mm')
-    //                             end = moment(`${dia_actual} ${hora}`, 'YYYY-MM-DD HH:mm')
-    //                             // Si los dias coinciden marcamos el flag como true para no realice mas comprobaciones y marque mal el horario
-    //                             diavacaciones = true;
-    //                         }
-    //                     })
-    //                 }  
-    //             // Despues de asignar la entrada y salida diaria del trabajador en cualquiera de los horarios 
-    //             // horario habitual, horario especifico y/o vacaciones asignamos cada seccion de 30 minutos al empleado para citas
-    //             let diff = end.diff(start, 'minutes')
-    //             let intervalos = _.range((diff / 30))
-    //             intervalos.forEach((element, index) => {
-    //                 let n = start.clone().add(index * 30, 'minutes').format('YYYY-MM-DD_HH:mm')
-    //                 let ref = `${this.empleado.nombre}_${n}`;
-    //                 (this.local_intervalos[ref] = this.local_intervalos[ref] || []).push(ref)
-    //             })
-    //     })
-    // },
     crearIntervalos: function crearIntervalos(n, dia_actual) {
       var _this = this;
 
@@ -1303,7 +1210,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     getItemText: function getItemText(item) {
       // Concatena nombre y apellidos para busqueda
-      return "".concat(item.apellidos, " ").concat(item.nombre);
+      return "".concat(item.nombre);
     },
     openForm: function openForm(data) {
       // Abre formulario pinchando en hora vacia
@@ -1458,60 +1365,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     filtrar_90_minutos: function filtrar_90_minutos(lista_horas, duracion) {
       // saca listado de horario disponible por empleado
-      var lista = []; //Si tiene el filtro de horas activo aplica el filtro de los 30 minutos, si lo tiene desactivado no tendrá en cuenta los 30 minutos
+      var lista = [];
+      lista_horas.forEach(function (element, index, self_array) {
+        var start = moment("2021-03-26 ".concat(element), 'YYYY-MM-DD HH:mm');
+        var num_inter = duracion / 15;
 
-      if (this.filtrohoras == true) {
-        lista_horas.forEach(function (element, index, self_array) {
-          var start = moment("2021-03-26 ".concat(element), 'YYYY-MM-DD HH:mm');
-
-          var intervalos = _.range(duracion / 30 + 2).map(function (x) {
-            return (x + 1) * 30;
-          });
-
-          var intervalos_completos = [-60, -30, 0].concat(_toConsumableArray(intervalos));
-          var horas = intervalos_completos.map(function (x) {
-            return start.clone().add(x, 'minutes').format('HH:mm');
-          });
-          var tiene_una_hora = self_array.includes(horas[0]) && self_array.includes(horas[1]);
-          var no_tiene_nada = !self_array.includes(horas[1]);
-          var tiene_una_hora_final = self_array.includes(horas[horas.length - 2]) && self_array.includes(horas[horas.length - 3]);
-          var no_tiene_nada_final = !self_array.includes(horas[horas.length - 3]);
-
-          var eliminar_inicio = _.drop(horas, 2);
-
-          var intervalo_real = _.dropRight(eliminar_inicio, 3);
-
-          var encaja = _.difference(intervalo_real, self_array).length === 0;
-
-          if ((tiene_una_hora || no_tiene_nada) && (tiene_una_hora_final || no_tiene_nada_final) && encaja) {
-            lista.push(element);
-          }
+        var intervalos = _.range(duracion / 15).map(function (x) {
+          return (x + 1) * 15;
         });
-      } else {
-        lista_horas.forEach(function (element, index, self_array) {
-          var start = moment("2021-03-26 ".concat(element), 'YYYY-MM-DD HH:mm');
 
-          var intervalos = _.range(duracion / 30 + 2).map(function (x) {
-            return (x + 1) * 30;
-          });
-
-          var intervalos_completos = [-60, -30, 0].concat(_toConsumableArray(intervalos));
-          var horas = intervalos_completos.map(function (x) {
-            return start.clone().add(x, 'minutes').format('HH:mm');
-          });
-
-          var eliminar_inicio = _.drop(horas, 2);
-
-          var intervalo_real = _.dropRight(eliminar_inicio, 3);
-
-          var encaja = _.difference(intervalo_real, self_array).length === 0;
-
-          if (encaja) {
-            lista.push(element);
-          }
+        var intervalos_completos = [0].concat(_toConsumableArray(intervalos));
+        var horas = intervalos_completos.map(function (x) {
+          return start.clone().add(x, 'minutes').format('HH:mm');
         });
-      }
 
+        var eliminar_inicio = _.dropRight(horas, 1);
+
+        var encaja = _.difference(eliminar_inicio, self_array).length === 0;
+
+        if (encaja) {
+          lista.push(element);
+        }
+      });
       return lista;
     },
     asignarCita: function asignarCita(item, app_empleado_id) {
@@ -1718,19 +1593,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       // Busqueda
       this.citacli = {};
-      console.log("clientes");
-      console.log(id);
       axios.get("api/app/getcitasbyuser/".concat(id)).then(function (res) {
-        console.log("citas clientes");
-        console.log(res.data);
         res.data.cita.forEach(function (cita) {
           _this14.citacli = cita;
         });
       }, function (err) {});
     },
     citaPet: function citaPet(citacli) {
-      console.log("redirigiiiir");
-      console.log(citacli);
       var base_url = citacli.tipo == 'peluqueria' ? 'citas-peluqueria?tipo=peluqueria' : 'citas-clinica?tipo=clinica';
       this.$router.push("".concat(base_url, "&fecha=").concat(citacli.start_format, "&tienda=").concat(citacli.tienda))["catch"](function () {});
       this.cierrabusqueda();
@@ -2381,10 +2250,18 @@ var render = function() {
               : _vm._e(),
             _vm._v(" "),
             _c("i", { staticStyle: { "text-transform": "capitalize" } }, [
-              _vm._v(_vm._s(cita.usuario) + " - " + _vm._s(cita.telefono))
-            ])
+              _vm._v(_vm._s(cita.usuario))
+            ]),
+            _vm._v(" "),
+            _vm._l(cita.servicios, function(item, index) {
+              return _c("div", { key: index }, [
+                _c("i", { staticStyle: { "text-transform": "capitalize" } }, [
+                  _vm._v(_vm._s(cita.servicios[index].nombre))
+                ])
+              ])
+            })
           ],
-          1
+          2
         )
       })
     ],
@@ -4540,7 +4417,7 @@ __webpack_require__.r(__webpack_exports__);
 var data_mixin = {
   data: function data() {
     return {
-      tienda: 8,
+      tienda: 1,
       tiendas: [],
       empleados: [],
       servicios: [],

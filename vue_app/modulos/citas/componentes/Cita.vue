@@ -125,7 +125,8 @@
             falseScrollFunction(e) {
                 this.$refs.calendar_wrap.scrollLeft = e.target.scrollLeft
             },
-            getCitas(empleado, dia) {               
+            getCitas(empleado, dia) {            
+                console.log(this.map_citas[`${empleado.nombre}_${dia}`])   ;
                 return this.map_citas[`${empleado.nombre}_${dia}`];
             },            
             getHorario(empleado, dia) {  

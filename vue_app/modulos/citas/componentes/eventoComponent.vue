@@ -635,7 +635,7 @@
                 });
             },
             getItemText(item) { // Concatena nombre y apellidos para busqueda
-                return `${item.apellidos} ${item.nombre}`;
+                return `${item.nombre}`;
             },      
             openForm(data) { // Abre formulario pinchando en hora vacia
                 this.dialog = true             
@@ -758,43 +758,27 @@
             },
             filtrar_90_minutos(lista_horas, duracion) { // saca listado de horario disponible por empleado
                 let lista = []
-                //Si tiene el filtro de horas activo aplica el filtro de los 30 minutos, si lo tiene desactivado no tendrá en cuenta los 30 minutos
-                if (this.filtrohoras == true){
-                    lista_horas.forEach((element, index, self_array) => {
-                        let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
-                        let intervalos = _.range((duracion / 30) + 2).map(x => (x + 1) * 30)
-                        let intervalos_completos = [-60, -30, 0, ...intervalos]
-                        let horas = intervalos_completos.map(x => {
-                            return start.clone().add(x, 'minutes').format('HH:mm')
-                        })
-                        let tiene_una_hora = self_array.includes(horas[0]) && self_array.includes(horas[1])
-                        let no_tiene_nada = !self_array.includes(horas[1])
-                        let tiene_una_hora_final = self_array.includes(horas[horas.length - 2]) && self_array.includes(horas[horas.length - 3])
-                        let no_tiene_nada_final = !self_array.includes(horas[horas.length - 3])
-                        let eliminar_inicio = _.drop(horas, 2)
-                        let intervalo_real = _.dropRight(eliminar_inicio, 3)
-                        let encaja = _.difference(intervalo_real, self_array).length === 0                        
-                        
-                        if ((tiene_una_hora || no_tiene_nada) && (tiene_una_hora_final || no_tiene_nada_final) && (encaja)) {
-                            lista.push(element)
-                        }
+            
+                lista_horas.forEach((element, index, self_array) => {
+            
+                    let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
+                    let num_inter = duracion/15;
+                    let intervalos = _.range((duracion / 15)).map(x => (x + 1) * 15)
+                    let intervalos_completos = [0, ...intervalos]
+                    let horas = intervalos_completos.map(x => {
+                        return start.clone().add(x, 'minutes').format('HH:mm')
                     })
-                }else{
-                    lista_horas.forEach((element, index, self_array) => {
-                        let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
-                        let intervalos = _.range((duracion / 30) + 2).map(x => (x + 1) * 30)
-                        let intervalos_completos = [-60, -30, 0, ...intervalos]
-                        let horas = intervalos_completos.map(x => {
-                            return start.clone().add(x, 'minutes').format('HH:mm')
-                        })                       
-                        let eliminar_inicio = _.drop(horas, 2)
-                        let intervalo_real = _.dropRight(eliminar_inicio, 3)
-                        let encaja = _.difference(intervalo_real, self_array).length === 0                                               
-                        if (encaja) {
-                            lista.push(element)
-                        }
-                    })
-                }              
+                                     
+                    let eliminar_inicio = _.dropRight(horas, 1)
+
+                    let encaja = _.difference(eliminar_inicio, self_array).length === 0                                               
+
+                    if (encaja) {
+                        lista.push(element)
+                    }
+                
+                })
+                
                 return lista
             },
             asignarCita(item, app_empleado_id) { // asigna los datos al pinchar en la hora (item) disponible para el empleado asignarDatos(item, empleado.app_empleado_id)                
@@ -965,19 +949,14 @@
             },                  
             busqueda(id) {  // Busqueda
                 this.citacli = {};
-                console.log("clientes")
-                    console.log(id)
+                
                 axios.get(`api/app/getcitasbyuser/${id}`).then(res => {
-                    console.log("citas clientes")
-                    console.log(res.data)
                     res.data.cita.forEach(cita => {
                         this.citacli = cita;
                     });
                 }, err => { }) 
             },            
             citaPet(citacli) {
-                console.log("redirigiiiir")
-                console.log(citacli)
                 let base_url = citacli.tipo == 'peluqueria' ? 'citas-peluqueria?tipo=peluqueria' : 'citas-clinica?tipo=clinica'
                 this.$router.push(`${base_url}&fecha=${citacli.start_format}&tienda=${citacli.tienda}`).catch(() => {});
                 this.cierrabusqueda();

@@ -61,7 +61,7 @@
           </v-checkbox>
         </v-col>
         <v-col cols="2">
-          <h5 class="d-flex justify-end text--secondary">{{servicio.precio}} <v-icon small color="text--primary">mdi-currency-eur</v-icon></h5> 
+          <h5 class="d-flex justify-end text--secondary"> </h5> 
         </v-col>
       </v-row>
     </v-responsive>
