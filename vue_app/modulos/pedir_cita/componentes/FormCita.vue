@@ -15,63 +15,28 @@
                     <h4
                     class="mx-auto my-auto text-xs-body-1"
                     >
-                      LISTADO TIENDAS Y SERVICIOS
+                      SELECCIONA SERVICIO Y PULSA CONTINUAR
                     </h4>
                   </div>
                   <v-row v-if="e1 == 2" align="center" justify="space-between" class="mx-2">
-                    <v-col cols="auto" class="container-responsive">
-                      <v-btn
-                        icon
-                        color="red lighten-2"
-                        @click="e1=1"
-                      >
-                        <v-icon>mdi-chevron-left</v-icon>
-                      </v-btn>
-                    </v-col>
+                    
                     <v-col cols="auto" class="container-responsive">
                       <h4>
-                        FECHA - HORA - EMPLEADO
+                        ESCOGE FECHA/HORA Y PULSA CONTINUAR
                       </h4>
-                    </v-col>
-                    <v-col cols="auto" class="container-responsive">
-                      <v-btn
-                        icon
-                        small
-                        @click="e1=1"
-                      >
-                        <v-icon small>mdi-close</v-icon>
-                      </v-btn>
                     </v-col>
                   </v-row>
                   <v-row v-if="e1 == 3" align="center" justify="space-between" class="mx-2">
                     <v-col cols="auto" class="container-responsive">
-                      <v-btn
-                        icon
-                        color="red lighten-2"
-                        @click="e1=2"
-                      >
-                        <v-icon>mdi-chevron-left</v-icon>
-                      </v-btn>
-                    </v-col>
-                    <v-col cols="auto" class="container-responsive">
                       <h4>
-                        SUS DATOS PARA LA CITA
+                        INTRODUCIR SUS DATOS
                       </h4>
-                    </v-col>
-                    <v-col cols="auto" class="container-responsive">
-                      <v-btn
-                        icon
-                        small
-                        @click="e1=1"
-                      >
-                        <v-icon small>mdi-close</v-icon>
-                      </v-btn>
                     </v-col>
                   </v-row>
                 </v-stepper-header>
 
                 <v-stepper-items>
-                  <v-stepper-content step="1" class="pa-1">
+                  <v-stepper-content step="1" class="pa-1" height="50">
                     <cita-servicios 
                       ref="citaServicios" 
                       :servicios="servicios" 
@@ -90,10 +55,7 @@
                         color="red lighten-2"
                         dark
                         @click="tapFecha()"
-                      >
-                        <v-icon dark>
-                          mdi-arrow-right
-                        </v-icon>
+                      >CONTINUAR
                       </v-btn>
                     </div>
                   </v-stepper-content>
@@ -103,6 +65,7 @@
                     ref="citaFecha"
                     :empleados="n_empleados" 
                     :duracion="duracion"
+                    @pasoAtras="pasoAtras"
                     @tapCliente="tapCliente" 
                     :tienda="tienda"
                     ></cita-fecha>
@@ -156,6 +119,7 @@ import FormCliente from '../componentes/formCliente'
       }
     },
     created() {
+      console.log(window.innerHeight);
       if (this.$route.query.id) {
         this.getEmpleado(this.$route.query.id)
       }
@@ -166,6 +130,13 @@ import FormCliente from '../componentes/formCliente'
       this.getTiendas();
     },
     methods: {
+      pasoAtras(){
+        if (this.e1 == 2){
+          this.e1 = 1;
+        }else if (this.e1 == 3){
+          this.e1 = 2;
+        }
+      },
       sendData(){
       
       },

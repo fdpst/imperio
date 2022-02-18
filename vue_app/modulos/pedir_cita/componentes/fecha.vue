@@ -62,7 +62,7 @@
       <v-divider></v-divider>
       <v-responsive
       class="overflow-y-auto"
-      max-height="330"
+      :max-height="height"
        >
       <v-row class="mt-2 mb-3" dense v-for="empleado in local_horario" :key="empleado.app_empleado_id">
         <v-col cols="12">
@@ -79,16 +79,24 @@
     </v-container>
     <v-divider></v-divider>
     <div class="mt-2 d-flex justify-end align-center">
+      <v-col col="6">
+        <v-btn
+          icon
+          small
+          @click="$emit('pasoAtras')"
+        >
+          <v-icon small>Atrás</v-icon>
+        </v-btn>
+      </v-col>
+      <v-col col="6">
       <v-btn
         color="red lighten-2"
         dark
         @click="$emit('tapCliente')"
         :disabled="nextTab"
-      >
-        <v-icon dark>
-          mdi-arrow-right
-        </v-icon>
+      >CONTINUAR
       </v-btn>
+      </v-col>
     </div>
   </div>
 </template>
@@ -110,7 +118,7 @@
       nextTab:true,
       horas: [],
       local_empleados: [],
-
+      height:(window.innerHeight*0.4).toFixed(),
 
     }),
     mounted()

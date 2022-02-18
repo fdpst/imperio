@@ -38,10 +38,10 @@
     </v-row>
     <v-responsive
       class="overflow-y-auto mt-2"
-      max-height="500"
+      :max-height="height"
       v-if="tienda"
     >
-      <v-row justify="space-between" align="center" class="mx-2" v-for="servicio in servicios" :key="servicio.id">
+      <v-row  justify="space-between" align="center" class="mx-2" v-for="servicio in servicios" :key="servicio.id">
         <v-col cols="10" class="py-0">
           <v-checkbox
             off-icon="mdi-checkbox-blank-circle-outline"
@@ -76,9 +76,11 @@ export default {
       radioGroup: [],
       isActive: false,
       tienda: 1,
+      height:(window.innerHeight*0.5).toFixed(),
     }
   },
   mounted() {
+      console.log(this.height)
       this.$emit('getData', this.tienda);
     },
   methods:
