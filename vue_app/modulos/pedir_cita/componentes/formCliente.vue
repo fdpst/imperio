@@ -70,13 +70,26 @@
     </v-form>
     <v-divider></v-divider>
     <div class="mt-2 d-flex justify-center align-center">
-      <v-btn
-        color="red lighten-2"
-        dark
-        @click="saveCita"
-      >
-        Confirmar Cita
-      </v-btn>
+      <v-col col="6">
+        <v-btn
+          color="red lighten-2"
+          dark
+          @click="$emit('pasoAtras')"
+        >ATRÁS
+          <!-- <v-icon small>Atrás</v-icon> -->
+        </v-btn>
+      </v-col>
+
+      <v-col col="6">
+        <v-btn
+          color="red lighten-2"
+          dark
+          @click="saveCita"
+        >
+          CONFIRMAR CITA
+        </v-btn>
+      </v-col>
+
     </div>
     <v-dialog
       v-model="dialog"

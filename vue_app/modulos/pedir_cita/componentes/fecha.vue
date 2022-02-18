@@ -44,11 +44,17 @@
                 <v-btn fab text small color="grey darken-2" class="" @click="prev"><v-icon small>mdi-arrow-left</v-icon></v-btn>
               </div>
               <div v-for="(weekday, i) in set_week_days" :key="i" class="dia-component full-width">
-                <v-btn class="dia-header text-center" height="auto" @click="selectDay(weekday)" :class="{'red lighten-2 white--text' : weekday.full_date == current_day_inmutable}">
-                  <span> {{selectDia(weekday.full_date)}}</span>
+                <!-- <v-btn class="dia-header text-center" height="auto" @click="selectDay(weekday)" :class="{'red lighten-2 white--text' : weekday.full_date == current_day_inmutable}">-->
+
+              <!-- // Deshabilita fecha si es anterior a dia actual para pedir citas -->
+                  <v-btn class="dia-header text-center" height="auto" @click="selectDay(weekday)" :disabled="disabledFecha(weekday.full_date)" 
+                        :class="{'red lighten-2 white--text' : weekday.full_date == current_day_inmutable}">
+              <!-- // Deshabilita fecha si es anterior a dia actual para pedir citas -->
+
+                  <span> {{selectDia(weekday.full_date)}}</span> 
                   <!-- <v-btn id="diabtn" @click="selectDay(weekday)" :class="{'green white--text' : weekday.full_date == current_day_inmutable}">
                   </v-btn> -->
-                     <span class="text-md-h5 text-responsive-dia"> {{weekday.numero_dia}} </span>
+                  <span class="text-md-h5 text-responsive-dia"> {{weekday.numero_dia}} </span>
                   <span>{{selectMes(weekday.full_date)}}</span>
                 </v-btn>
               </div>
@@ -75,17 +81,16 @@
         </v-col>
       </v-row>
       </v-responsive>
-
     </v-container>
     <v-divider></v-divider>
     <div class="mt-2 d-flex justify-end align-center">
       <v-col col="6">
         <v-btn
-          icon
-          small
+          color="red lighten-2"
+          dark
           @click="$emit('pasoAtras')"
-        >
-          <v-icon small>Atrás</v-icon>
+        >ATRÁS
+          <!-- <v-icon small>Atrás</v-icon> -->
         </v-btn>
       </v-col>
       <v-col col="6">
@@ -134,6 +139,20 @@
         }
             return 'grey lighten-3';
       },
+
+      // Deshabilita fecha si es anterior a dia actual para pedir citas
+      disabledFecha(fecha)
+      {
+        var fechaActua = new Date(moment().format('YYYY-MM-DD'));
+        var fechaCalendario = new Date(fecha);
+        if(fechaActua <= fechaCalendario)
+        {
+          return false
+        }
+        return true
+      },
+      // Deshabilita fecha si es anterior a dia actual para pedir citas
+
       selectDay(valor){
         this.fecha = valor.full_date;
         this.current_day_inmutable = valor.full_date;
@@ -148,7 +167,6 @@
         return moment(fecha).format('ddd').toUpperCase()
       },
       buscarDisponible() { // Evento boton busca disponible
-
         this.nextTab = true;
         if (this.fecha ==null){
             this.fecha = moment().format('YYYY-MM-DD')
@@ -160,21 +178,16 @@
           tipo: 'peluqueria',
           empleado_id: this.empleado,
         }
-
-          axios.post(`api/app/buscar-horario-disponible`, data).then(res => {
-            this.horas = this.filtrarHoras(res.data);
-            this.$toast.sucs('consulta realizada');
-          }, res => {})
-        
+        axios.post(`api/app/buscar-horario-disponible`, data).then(res => {
+          this.horas = this.filtrarHoras(res.data);
+          this.$toast.sucs('consulta realizada');
+        }, res => {})
       },
       asignarDatos(item, empleado) { // Boton guardar cuando se selecciona la hora de la cita
             this.horario = item;
             this.empleadoId = empleado;
             this.nextTab = false;
-            // this.IdEmpleadoCita = empleado;
-            // this.evento.app_empleado_id = empleado;
-            // this.editable = false
-        }, 
+      }, 
       filtrarHoras(lista_empleados) { // busca horas de trabajo utilizable por empleado
         this.local_horario = lista_empleados.map(element => {
           return {
@@ -186,30 +199,24 @@
       },
       filtrar_90_minutos(lista_horas, duracion) { // saca listado de horario disponible por empleado
         let lista = []
-          if (lista_horas){
-            lista_horas.forEach((element, index, self_array) => {
-        
-                let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
-                let num_inter = duracion/15;
-                let intervalos = _.range((duracion / 15)).map(x => (x + 1) * 15)
-                let intervalos_completos = [0, ...intervalos]
-                let horas = intervalos_completos.map(x => {
-                    return start.clone().add(x, 'minutes').format('HH:mm')
-                })
-                                  
-                let eliminar_inicio = _.dropRight(horas, 1)
-
-                let encaja = _.difference(eliminar_inicio, self_array).length === 0                                               
-
-                if (encaja) {
-                    lista.push(element)
-                }
-            
-            })
-          }
-          
-          return lista
-        
+        if (lista_horas){
+          lista_horas.forEach((element, index, self_array) => {
+      
+              let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
+              let num_inter = duracion/15;
+              let intervalos = _.range((duracion / 15)).map(x => (x + 1) * 15)
+              let intervalos_completos = [0, ...intervalos]
+              let horas = intervalos_completos.map(x => {
+                  return start.clone().add(x, 'minutes').format('HH:mm')
+              })
+              let eliminar_inicio = _.dropRight(horas, 1)
+              let encaja = _.difference(eliminar_inicio, self_array).length === 0                                               
+              if (encaja) {
+                  lista.push(element)
+              }
+          })
+        }
+        return lista
       },
     },
     watch:
@@ -292,6 +299,7 @@
 }
 .dia-header {
   padding: 8px !important;
+  font-size: 0.7rem !important;
 }
 .dia-container {
     display: flex;
@@ -307,6 +315,7 @@
   .dia-header
   {
     min-width: 10px !important;
+  font-size: 0.6rem !important;
   }
   .padding-responsive
   {
@@ -323,7 +332,7 @@
   .dia-header
   {
     min-width: 10px !important;
-    font-size: 0.6rem !important;
+    font-size: 0.5rem !important;
   }
   .text-responsive-dia
   {
@@ -335,6 +344,7 @@
   .dia-header
   {
     padding: 4px !important;
+    font-size: 0.5rem !important;
   }
 }
 </style>

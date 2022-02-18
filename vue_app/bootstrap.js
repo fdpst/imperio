@@ -1,6 +1,5 @@
 window._ = require('lodash')
 window.Vue = require('vue')
-
 window.moment = require('moment')
 
 moment.updateLocale('en', {

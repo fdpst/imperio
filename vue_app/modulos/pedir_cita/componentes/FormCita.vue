@@ -72,7 +72,12 @@
                   </v-stepper-content>
 
                   <v-stepper-content step="3" class="pa-1">
-                    <form-cliente ref="formCliente" :formData="formData" @clearFormulario="clearFormulario"></form-cliente>
+                    <form-cliente 
+                    ref="formCliente" 
+                    :formData="formData" 
+                    @clearFormulario="clearFormulario"
+                    @pasoAtras="pasoAtras">
+                    </form-cliente>
                   </v-stepper-content>
                 </v-stepper-items>
               </v-stepper>
@@ -245,6 +250,57 @@ import FormCliente from '../componentes/formCliente'
 </script>
 <style>
 
+@media screen and (max-width: 599px) and (min-width: 1920px) {
+
+  div.v-messages.theme--light, div.v-text-field__details{
+    display: none !important;
+  }
+  div.padding.responsive.col.col-12{
+    padding: 0px !important;
+    margin: 0px !important;
+  }  
+  .container-responsive {
+    padding: 0px !important;
+  }
+  div.v-responsive__content{
+    height: 425px !important;
+  }
+  .sheel-responsive
+  {
+    padding: 0px !important;
+    border-radius: 0px 0 !important;
+    margin-top: 10px !important;
+    margin: 0 auto;;
+    width:93% !important;
+  }
+}
+
+@media screen and (max-width: 600px){
+
+  div.v-messages.theme--light, div.v-text-field__details{
+    display: none !important;
+  }
+  div.padding.responsive.col.col-12{
+    padding: 0px !important;
+    margin: 0px !important;
+  }  
+  .container-responsive {
+    padding: 0px !important;
+  }
+  div.v-responsive__content{
+    height: 425px !important;
+  }
+  .sheel-responsive
+  {
+    padding: 0px !important;
+    border-radius: 0px 0 !important;
+    margin-top: 10px !important;
+    margin: 0 auto;;
+    width:93% !important;
+  }
+}
+
+/* 
 @media (max-width: 600px) {
   .container-responsive {
     padding: 0px !important;
@@ -255,6 +311,6 @@ import FormCliente from '../componentes/formCliente'
     margin: 0px !important;
     border-radius: 0px 0 !important
   }
-}
+} */
 
 </style>
