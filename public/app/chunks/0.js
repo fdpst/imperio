@@ -140,8 +140,13 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.calendar_wrap.scrollLeft = e.target.scrollLeft;
     },
     getCitas: function getCitas(empleado, dia) {
-      console.log(this.map_citas["".concat(empleado.nombre, "_").concat(dia)]);
-      return this.map_citas["".concat(empleado.nombre, "_").concat(dia)];
+      var map = this.map_citas["".concat(empleado.nombre, "_").concat(dia)];
+
+      if (map == null) {
+        map = [];
+      }
+
+      return map;
     },
     getHorario: function getHorario(empleado, dia) {
       var _this = this;
@@ -385,7 +390,25 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _handlers_eventbus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../handlers/eventbus */ "./vue_app/modulos/citas/handlers/eventbus.js");
+/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuedraggable */ "./node_modules/vuedraggable/dist/vuedraggable.umd.js");
+/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuedraggable__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _handlers_eventbus__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../handlers/eventbus */ "./vue_app/modulos/citas/handlers/eventbus.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -412,10 +435,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['intervalos', 'empleado', 'citas', 'horario', 'dia_actual', 'interval_height', 'fechas', 'type', 'app_tienda_id'],
+  components: {
+    draggable: vuedraggable__WEBPACK_IMPORTED_MODULE_0___default.a
+  },
+  props: ['intervalos', 'empleado', 'citas', 'horario', 'dia_actual', 'interval_height', 'fechas', 'type', 'app_tienda_id', 'tipo'],
   data: function data() {
     return {
+      myArray: [{
+        "name": "vue.draggable",
+        "order": 1
+      }, {
+        "name": "draggable",
+        "order": 2
+      }, {
+        "name": "component",
+        "order": 3
+      }, {
+        "name": "for",
+        "order": 4
+      }, {
+        "name": "vue.js 2.0",
+        "order": 5
+      }, {
+        "name": "based",
+        "order": 6
+      }, {
+        "name": "on",
+        "order": 7
+      }, {
+        "name": "Sortablejs",
+        "order": 8
+      }],
+      indexes: [],
       local_citas: [],
       local_intervalos: {}
     };
@@ -425,7 +478,77 @@ __webpack_require__.r(__webpack_exports__);
       immediate: true,
       handler: function handler(n) {
         this.$nextTick(function () {
-          this.local_citas = n;
+          var resultado = [];
+          var index = 0;
+
+          for (var i = 0; i < this.intervalos.length; i++) {
+            if (n.length > 0) {
+              for (var y = 0; y < n.length; y++) {
+                var fecha = n[y].start.substring(11);
+
+                if (!(this.horario && this.empleadoHorario("".concat(this.empleado.nombre, "_").concat(this.dia_actual, "_").concat(this.intervalos[i])))) {
+                  resultado[i] = {
+                    'id': -1,
+                    'intervalo': this.intervalos[i],
+                    'locked': true,
+                    'par': -1,
+                    'dia': this.dia_actual
+                  };
+                  break;
+                }
+
+                if (fecha == this.intervalos[i]) {
+                  resultado[i] = n[y];
+                  var diferencia = Math.round(resultado[i].duracion / 15) - 1;
+                  resultado[i].intervalo = this.intervalos[i];
+                  console.log(diferencia);
+
+                  for (var q = i + 1; q <= i + diferencia; q++) {
+                    resultado[q] = {
+                      'id': -1,
+                      'intervalo': this.intervalos[q],
+                      'locked': true,
+                      'par': resultado[i].id,
+                      'dia': this.dia_actual
+                    };
+                  }
+
+                  i += diferencia;
+                  break;
+                } else {
+                  resultado[i] = {
+                    'id': -1,
+                    'intervalo': this.intervalos[i],
+                    'locked': false,
+                    'dia': this.dia_actual
+                  };
+                }
+              }
+
+              index++;
+            } else {
+              resultado[i] = {
+                'id': -1,
+                'intervalo': this.intervalos[i],
+                'dia': this.dia_actual
+              };
+
+              if (!(this.horario && this.empleadoHorario("".concat(this.empleado.nombre, "_").concat(this.dia_actual, "_").concat(this.intervalos[i])))) {
+                resultado[i] = {
+                  'id': -1,
+                  'intervalo': this.intervalos[i],
+                  'locked': true,
+                  'par': -1,
+                  'dia': this.dia_actual
+                };
+              }
+            }
+          }
+
+          console.log("intervalos");
+          console.log(this.intervalos);
+          console.log(resultado);
+          this.local_citas = resultado;
         });
       }
     },
@@ -454,8 +577,114 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    crearIntervalos: function crearIntervalos(n, dia_actual) {
+    checkMove: function checkMove(evt) {
+      console.log(evt);
+      var target = evt.relatedContext.index;
+      var from = evt.draggedContext.index;
+      this.indexes = [];
+      var list = evt.relatedContext.list;
+
+      if (list[target].id >= 0) {
+        return false;
+      }
+
+      ;
+      if (this.local_citas[from].id < 0) return false;
+      var tiles = Math.round(this.local_citas[from].duracion / 15);
+
+      for (var i = target; i < target + tiles; i++) {
+        if (list[i].locked) {
+          if (list[i].par < 0) return false;
+
+          if (list[i].par != this.local_citas[from].id) {
+            console.log('este: ' + i);
+            console.log(list[target]);
+            return false;
+          }
+        }
+
+        if (list[i].id >= 0 & list[i].id != this.local_citas[from].id) {
+          return false;
+        }
+      }
+
+      this.indexes = [target, from, list];
+      return false;
+    },
+    StartDrag: function StartDrag(evt) {},
+    EndingDrag: function EndingDrag(evt) {
+      if (this.indexes.length > 0) {
+        var target = this.indexes[0];
+        var from = this.indexes[1];
+        var elemento1 = this.local_citas[from];
+        var elemento2 = this.indexes[2][target]; //this.local_citas[from] = elemento2;
+        //this.local_citas[target] = elemento1;
+
+        this.getDiferentElement(elemento1, elemento2);
+      }
+    },
+    getDiferentElement: function getDiferentElement(elemento1, elemento2) {
+      var elementosDiferente;
+      elementosDiferente = elemento1;
+      elementosDiferente.start = elemento2.dia + " " + elemento2.intervalo;
+      elementosDiferente.end = moment(elementosDiferente.start).clone().add(elementosDiferente.duracion, 'minutes').format('YYYY-MM-DD HH:mm');
+      elementosDiferente.app_tienda_id = this.app_tienda_id;
+      elementosDiferente.tipo = this.tipo;
+      console.log("cita");
+      this.saveCita(elementosDiferente);
+      /*
+      for(let i = 0 ; i < this.local_citas.length ; i++){
+          if(this.local_citas[i].id >=0){
+             
+                  let fecha1 = this.local_citas[i].start.substring(11);
+                  if(target.inte != fecha1){
+                      elementosDiferentes[index] =this.local_citas[i];
+                      elementosDiferentes[index].start =this.local_citas[i].start.substring(0, 11)+target.intervalo;
+                      elementosDiferentes[index].end =  moment(this.local_citas[i].start).clone().add(this.local_citas[i].duracion, 'minutes').format('YYYY-MM-DD HH:mm')
+                      elementosDiferentes[index].app_tienda_id = this.app_tienda_id;
+                      elementosDiferentes[index].tipo = this.tipo;
+                       
+                      console.log("cita");
+                      console.log(this.local_citas[i]);
+                      this.saveCita(elementosDiferentes[index]);
+                      index++;
+                  }
+              
+          }
+      }*/
+
+      console.log(this.local_citas);
+      console.log(elementosDiferentes);
+    },
+    saveCita: function saveCita(cita) {
       var _this = this;
+
+      // graba cita con datos recibidos del metodo anterior asignarCita()
+      //le paso las observaciones a evento para actualizarlo en el controller y grabamos la cita
+      axios.post("api/app/savecita", cita).then(function (res) {
+        _this.$toast.sucs('cita guardada con exito');
+
+        _this.$emit('cita_guardada', res.data);
+
+        _this.$store.dispatch('getNotificaciones');
+        /*axios.get(`api/app/geteventsbymonth/${fecha}`).then(res => {
+            this.citas = res.data
+        }, res => {})*/
+
+      }, function (res) {
+        if (res.response.status == 301) {
+          return _this.$toast.warn(res.response.data.message);
+        }
+
+        if (res.response.status == 422) {
+          return _this.$toast.warn('Debe completar los campos');
+        }
+
+        _this.$toast.error('algo ha salido mal');
+      });
+    },
+    crearIntervalos: function crearIntervalos(n, dia_actual) {
+      var _this2 = this;
 
       var intervalos = n.forEach(function (element) {
         var start = moment("".concat(dia_actual, " ").concat(element.entrada), 'YYYY-MM-DD HH:mm');
@@ -466,8 +695,8 @@ __webpack_require__.r(__webpack_exports__);
 
         intervalos.forEach(function (element, index) {
           var n = start.clone().add(index * 15, 'minutes').format('YYYY-MM-DD_HH:mm');
-          var ref = "".concat(_this.empleado.nombre, "_").concat(n);
-          (_this.local_intervalos[ref] = _this.local_intervalos[ref] || []).push(ref);
+          var ref = "".concat(_this2.empleado.nombre, "_").concat(n);
+          (_this2.local_intervalos[ref] = _this2.local_intervalos[ref] || []).push(ref);
         });
       });
     },
@@ -488,16 +717,32 @@ __webpack_require__.r(__webpack_exports__);
     empleadoHorario: function empleadoHorario(ref) {
       return this.local_intervalos[ref];
     },
-    openForm: function openForm() {
-      _handlers_eventbus__WEBPACK_IMPORTED_MODULE_0__["EventBus"].$emit('open_form', {
+    openForm: function openForm(intervalo) {
+      _handlers_eventbus__WEBPACK_IMPORTED_MODULE_1__["EventBus"].$emit('open_form', {
         app_empleado_id: this.empleado.id,
-        fecha: this.dia_actual
+        fecha: this.dia_actual,
+        intervalo: intervalo
       });
     },
     setCita: function setCita(cita) {
-      _handlers_eventbus__WEBPACK_IMPORTED_MODULE_0__["EventBus"].$emit('set_cita', cita);
+      _handlers_eventbus__WEBPACK_IMPORTED_MODULE_1__["EventBus"].$emit('set_cita', cita);
     },
     timeToY: function timeToY(cita) {
+      console.log(cita.id);
+
+      if (cita.locked & cita.par == -1) {
+        return {
+          display: 'none',
+          height: "0px",
+          backgroundColor: 'transparent',
+          overflow: 'hidden'
+        };
+      }
+
+      if (cita.id == -1) {
+        return this.timeToYEmpty(cita);
+      }
+
       var ref_date = "".concat(cita.start.substring(0, 10), "_").concat(cita.start.substring(11));
       var ref_name = "".concat(this.empleado.nombre, "_").concat(ref_date);
 
@@ -505,8 +750,45 @@ __webpack_require__.r(__webpack_exports__);
         return {
           display: 'block',
           top: "".concat(this.$refs[ref_name][0].offsetTop, "px"),
-          height: "".concat(cita.duracion / 15 * this.interval_height, "px"),
-          backgroundColor: cita.color
+          height: "".concat(this.interval_height, "px"),
+          backgroundColor: 'transparent',
+          overflow: 'visible'
+        };
+      }
+
+      return {
+        display: 'none'
+      };
+    },
+    HeighttoY: function HeighttoY(cita) {
+      return {
+        padding: "3px",
+        display: 'block',
+        height: "".concat(Math.round(cita.duracion / 15) * this.interval_height, "px"),
+        backgroundColor: cita.color,
+        'min-width': '100%',
+        'border-radius': '8px',
+        'border': 'solid 1px #fff',
+        'pointer-events': 'none'
+      };
+    },
+    timeToYEmpty: function timeToYEmpty(cita) {
+      return {
+        display: 'block',
+        backgroundColor: 'transparent',
+        height: "".concat(this.interval_height, "px"),
+        outline: 'none',
+        border: 'none'
+      };
+    },
+    TimeToTop: function TimeToTop(cita) {
+      var ref_date = "".concat(this.dia_actual, "_").concat(cita.intervalo);
+      var ref_name = "".concat(this.empleado.nombre, "_").concat(ref_date);
+
+      if (this.$refs[ref_name] !== undefined && this.$refs[ref_name][0]) {
+        return {
+          top: "".concat(this.$refs[ref_name][0].offsetTop, "px"),
+          backgroundColor: "red"
         };
       }
 
@@ -1001,7 +1283,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         direccion_recogida: null,
         direccion_entrega: null,
         pago: 0,
-        precio: ''
+        precio: '',
+        intervalo: null,
+        fechainicial: null,
+        unicoelemento: false
       },
       citapet: {
         id: null,
@@ -1218,6 +1503,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.evento.fecha = data.fecha;
       this.evento.app_tienda_id = this.app_tienda_id;
       this.evento.app_empleado_id = data.app_empleado_id;
+      this.evento.intervalo = data.intervalo;
+      this.evento.fechainicial = data.fecha;
     },
     saveUsuario: function saveUsuario() {
       var _this6 = this;
@@ -1345,7 +1632,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           this.dialogocita = true;
         } else {
         axios.post("api/app/buscar-horario-disponible", data).then(function (res) {
-          _this9.horas = _this9.filtrarHoras(res.data);
+          var thisdata = res.data;
+          /*for(let i = 0 ; i < res.data[0].diferencia.length; i++){
+             let diferencia = thisdata[0].diferencia[i];
+             if(diferencia == this.evento.intervalo){
+                 let diferencias = [diferencia];
+                 thisdata[0].diferencia = diferencias;
+                 break;
+             }
+          }*/
+
+          _this9.horas = _this9.filtrarHoras(thisdata);
+          if (_this9.unicoelemento) _this9.asignarDatos(_this9.local_horario[0].horario[0], _this9.local_horario[0].app_empleado_id);
 
           _this9.$toast.sucs('consulta realizada');
         }, function (res) {});
@@ -1364,8 +1662,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     filtrar_90_minutos: function filtrar_90_minutos(lista_horas, duracion) {
+      var _this11 = this;
+
       // saca listado de horario disponible por empleado
       var lista = [];
+      this.unicoelemento = false;
       lista_horas.forEach(function (element, index, self_array) {
         var start = moment("2021-03-26 ".concat(element), 'YYYY-MM-DD HH:mm');
         var num_inter = duracion / 15;
@@ -1383,7 +1684,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         var encaja = _.difference(eliminar_inicio, self_array).length === 0;
 
-        if (encaja) {
+        if (encaja && !_this11.unicoelemento) {
+          if (element == _this11.evento.intervalo && _this11.evento.fechainicial == _this11.evento.fecha) {
+            lista = [];
+            _this11.unicoelemento = true;
+          }
+
           lista.push(element);
         }
       });
@@ -1409,40 +1715,40 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.editable = false;
     },
     saveCita: function saveCita() {
-      var _this11 = this;
+      var _this12 = this;
 
       // graba cita con datos recibidos del metodo anterior asignarCita()
       //le paso las observaciones a evento para actualizarlo en el controller y grabamos la cita
       this.evento.observaciones = this.mascota.observaciones;
       this.evento.observacionesUsuario = this.usuario.observaciones;
       axios.post("api/app/savecita", this.evento).then(function (res) {
-        var fecha = _this11.evento.fecha;
+        var fecha = _this12.evento.fecha;
 
-        _this11.$toast.sucs('cita guardada con exito');
+        _this12.$toast.sucs('cita guardada con exito');
 
-        _this11.$emit('cita_guardada', res.data);
+        _this12.$emit('cita_guardada', res.data);
 
-        _this11.closeDialog();
+        _this12.closeDialog();
 
-        _this11.$store.dispatch('getNotificaciones');
+        _this12.$store.dispatch('getNotificaciones');
 
         axios.get("api/app/geteventsbymonth/".concat(fecha)).then(function (res) {
-          _this11.citas = res.data;
+          _this12.citas = res.data;
         }, function (res) {});
       }, function (res) {
         if (res.response.status == 301) {
-          return _this11.$toast.warn(res.response.data.message);
+          return _this12.$toast.warn(res.response.data.message);
         }
 
         if (res.response.status == 422) {
-          return _this11.$toast.warn('Debe completar los campos');
+          return _this12.$toast.warn('Debe completar los campos');
         }
 
-        _this11.$toast.error('algo ha salido mal');
+        _this12.$toast.error('algo ha salido mal');
       });
     },
     getMascotas: function getMascotas(usuario_id, reseteo_mascota) {
-      var _this12 = this;
+      var _this13 = this;
 
       // Obtiene usuario id, mascota id , historial y evento  
       if (reseteo_mascota) {
@@ -1455,14 +1761,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       axios.get("api/app/get-mascotas-by-user/".concat(usuario_id)).then(function (res) {
-        _this12.mascotas = res.data;
+        _this13.mascotas = res.data;
 
-        if (_this12.evento.app_mascota_id != null) {
-          var i = _this12.mascotas.findIndex(function (x) {
-            return x.id == _this12.evento.app_mascota_id;
+        if (_this13.evento.app_mascota_id != null) {
+          var i = _this13.mascotas.findIndex(function (x) {
+            return x.id == _this13.evento.app_mascota_id;
           });
 
-          _this12.mascota = _this12.mascotas[i];
+          _this13.mascota = _this13.mascotas[i];
         }
       }, function (res) {});
     },
@@ -1554,15 +1860,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.resetUsuario();
     },
     eliminarCita: function eliminarCita(toggle_exclusive) {
-      var _this13 = this;
+      var _this14 = this;
 
       // Elimina cita en pantalla
       axios.get("api/app/eliminarcita/".concat(this.evento.id, "/").concat(toggle_exclusive)).then(function (res) {
-        _this13.$emit('eliminar_cita', _this13.evento, toggle_exclusive);
+        _this14.$emit('eliminar_cita', _this14.evento, toggle_exclusive);
 
-        _this13.closeDialog();
+        _this14.closeDialog();
       }, function (res) {
-        _this13.$toast.error('algo ha salido mal');
+        _this14.$toast.error('algo ha salido mal');
       });
       this.toggle_exclusive = null;
     },
@@ -1589,13 +1895,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.dialogobuscar = true;
     },
     busqueda: function busqueda(id) {
-      var _this14 = this;
+      var _this15 = this;
 
       // Busqueda
       this.citacli = {};
       axios.get("api/app/getcitasbyuser/".concat(id)).then(function (res) {
         res.data.cita.forEach(function (cita) {
-          _this14.citacli = cita;
+          _this15.citacli = cita;
         });
       }, function (err) {});
     },
@@ -1666,7 +1972,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.i, "\n.hide-column {\n    display: none !important;\n}\n.empleado-nombre {\n    width: 100%;\n    padding: 0.1rem;\n    text-align: center;\n    text-transform: uppercase;\n    font-size: 4px;\n}\n.empleado-column {\n    min-height: 100vh;\n    position: relative;\n}\n.week {\n    /*width: 100px;*/\n    width: inherit;\n}\n.day {\n    width: inherit;\n}\n.empleado-row {\n    border-right: #e0e0e0 1px solid;\n    border-bottom: #e0e0e0 1px solid;\n    height: 40px;\n    width: auto;\n    font-size: 12px;\n}\n.empleado-row1 {\n    border-right: #e0e0e0 1px solid;\n    border-bottom: #e0e0e0 1px solid;\n    height: 90px;\n    width: 292px;\n    font-size: 19px;\n}\n.disabled-row {\n    background-color: #485772;\n    color: #ffffff !important;\n}\n.cita-element {\n    position: absolute;\n    left: 0px;\n    width: 99%;\n    background-color: #1e5dbf;\n    border-radius: 8px;\n    border: solid 1px #fff;\n    padding: 3px;\n    color: #fff;\n    font-size: 12px;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.i, "\n.hide-column {\n     display: none !important;\n}\n.empleado-nombre {\n     width: 100%;\n     padding: 0.1rem;\n     text-align: center;\n     text-transform: uppercase;\n     font-size: 4px;\n}\n.empleado-column {\n     min-height: 100vh;\n     position: relative;\n}\n.week {\n     /*width: 100px;*/\n     width: inherit;\n}\n.day {\n     width: inherit;\n}\n.empleado-row {\n     border-right: #e0e0e0 1px solid;\n     border-bottom: #e0e0e0 1px solid;\n     height: 40px;\n     width: auto;\n     font-size: 12px;\n}\n.empleado-row1 {\n     border-right: #e0e0e0 1px solid;\n     border-bottom: #e0e0e0 1px solid;\n     height: 90px;\n     width: 292px;\n     font-size: 19px;\n}\n.disabled-row {\n     background-color: #485772;\n     color: #ffffff !important;\n}\n.cita-element-2 {\n     \n     left: 0px;\n     width: 99%;\n     background-color: #1e5dbf;\n     \n     padding: 0px;\n     color: #fff;\n     font-size: 12px;\n}\n", ""]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -2088,6 +2394,7 @@ var render = function() {
                               attrs: {
                                 intervalos: _vm.intervalos,
                                 app_tienda_id: _vm.tienda,
+                                tipo: _vm.tipo,
                                 empleado: empleado,
                                 citas: _vm.getCitas(
                                   empleado,
@@ -2104,7 +2411,8 @@ var render = function() {
                                 dia_actual: weekday.full_date,
                                 interval_height: _vm.slider,
                                 type: _vm.type
-                              }
+                              },
+                              on: { cita_guardada: _vm.agregarCita }
                             })
                           }),
                           1
@@ -2213,57 +2521,110 @@ var render = function() {
                 style: { height: _vm.interval_height + "px" },
                 on: {
                   click: function($event) {
-                    return _vm.openForm()
+                    return _vm.openForm(intervalo)
                   }
                 }
               },
-              [_vm._v(" \n        " + _vm._s(intervalo) + "\n    ")]
+              [
+                _vm._v(" \n        " + _vm._s(intervalo) + "\n        "),
+                _c("div")
+              ]
             )
           : _c(
               "div",
               {
                 staticClass: "empleado-row disabled-row",
-                style: { height: _vm.interval_height + "px" }
+                style: { height: _vm.interval_height + "px", display: "none" }
               },
               [_vm._v(_vm._s(intervalo) + " ")]
             )
       }),
       _vm._v(" "),
-      _vm._l(_vm.local_citas, function(cita) {
-        return _c(
-          "div",
-          {
-            key: cita.id,
-            staticClass: "cita-element",
-            style: [_vm.timeToY(cita)],
-            on: {
-              click: function($event) {
-                return _vm.setCita(cita)
+      _c(
+        "div",
+        {
+          style: {
+            position: "absolute",
+            "min-width": "100%",
+            top: _vm.interval_height + "px"
+          }
+        },
+        [
+          _c(
+            "draggable",
+            {
+              attrs: { group: "dia_actual", move: _vm.checkMove },
+              on: { start: _vm.StartDrag, end: _vm.EndingDrag },
+              model: {
+                value: _vm.local_citas,
+                callback: function($$v) {
+                  _vm.local_citas = $$v
+                },
+                expression: "local_citas"
               }
-            }
-          },
-          [
-            !cita.confirmada
-              ? _c("v-icon", { attrs: { small: "", color: "white" } }, [
-                  _vm._v("mdi-alert-circle")
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("i", { staticStyle: { "text-transform": "capitalize" } }, [
-              _vm._v(_vm._s(cita.usuario))
-            ]),
-            _vm._v(" "),
-            _vm._l(cita.servicios, function(item, index) {
-              return _c("div", { key: index }, [
-                _c("i", { staticStyle: { "text-transform": "capitalize" } }, [
-                  _vm._v(_vm._s(cita.servicios[index].nombre))
-                ])
-              ])
-            })
-          ],
-          2
-        )
-      })
+            },
+            _vm._l(_vm.local_citas, function(cita) {
+              return _c(
+                "div",
+                {
+                  key: cita.id,
+                  staticClass: "cita-element-2",
+                  style: [_vm.timeToY(cita)]
+                },
+                [
+                  cita.id >= 0
+                    ? _c(
+                        "div",
+                        {
+                          style: [_vm.HeighttoY(cita)],
+                          on: {
+                            click: function($event) {
+                              return _vm.setCita(cita)
+                            }
+                          }
+                        },
+                        [
+                          !cita.confirmada
+                            ? _c(
+                                "v-icon",
+                                { attrs: { small: "", color: "white" } },
+                                [_vm._v("mdi-alert-circle")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c(
+                            "i",
+                            { staticStyle: { "text-transform": "capitalize" } },
+                            [
+                              _vm._v(
+                                _vm._s(cita.usuario) +
+                                  " - " +
+                                  _vm._s(cita.telefono)
+                              )
+                            ]
+                          )
+                        ],
+                        1
+                      )
+                    : _c("div", {
+                        staticStyle: {
+                          "min-height": "100%",
+                          "min-width": "100%"
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.openForm(cita.intervalo)
+                          }
+                        }
+                      })
+                ]
+              )
+            }),
+            0
+          )
+        ],
+        1
+      )
     ],
     2
   )

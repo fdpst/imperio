@@ -449,7 +449,10 @@
                     direccion_recogida:null,
                     direccion_entrega:null,
                     pago:0,
-                    precio:''
+                    precio:'',                    
+                    intervalo:null,
+                    fechainicial:null,                    
+                    unicoelemento:false,
                 },
                 citapet: {
                     id: null,
@@ -642,6 +645,8 @@
                 this.evento.fecha = data.fecha
                 this.evento.app_tienda_id = this.app_tienda_id                
                 this.evento.app_empleado_id = data.app_empleado_id
+                this.evento.intervalo = data.intervalo;
+                this.evento.fechainicial = data.fecha;
             },
             saveUsuario() { // crea nuevo usuario desde cita
                 //this.usuario.id = this.evento.app_usuario_id;
@@ -741,7 +746,19 @@
                 else 
                 {                    
                     axios.post(`api/app/buscar-horario-disponible`, data).then(res => {
-                        this.horas = this.filtrarHoras(res.data);
+                        
+                        let thisdata = res.data;
+                        /*for(let i = 0 ; i < res.data[0].diferencia.length; i++){
+                           let diferencia = thisdata[0].diferencia[i];
+                           if(diferencia == this.evento.intervalo){
+                               let diferencias = [diferencia];
+                               thisdata[0].diferencia = diferencias;
+                               break;
+                           }
+                        }*/
+                        this.horas = this.filtrarHoras(thisdata);
+                        if(this.unicoelemento)
+                         this.asignarDatos(this.local_horario[0].horario[0],this.local_horario[0].app_empleado_id);
                         this.$toast.sucs('consulta realizada');
 
                     }, res => {})
@@ -758,7 +775,7 @@
             },
             filtrar_90_minutos(lista_horas, duracion) { // saca listado de horario disponible por empleado
                 let lista = []
-            
+                this.unicoelemento = false;
                 lista_horas.forEach((element, index, self_array) => {
             
                     let start = moment(`2021-03-26 ${element}`, 'YYYY-MM-DD HH:mm')
@@ -773,9 +790,14 @@
 
                     let encaja = _.difference(eliminar_inicio, self_array).length === 0                                               
 
-                    if (encaja) {
-                        lista.push(element)
-                    }
+                     if (encaja&&!this.unicoelemento) {
+                            if(element == this.evento.intervalo && this.evento.fechainicial == this.evento.fecha){
+                                lista = [];
+                                this.unicoelemento = true;
+                            }
+                            lista.push(element)
+                           
+                        }
                 
                 })
                 

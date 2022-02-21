@@ -41,7 +41,7 @@
                             </v-btn>
                         </div>
                         <div class="cita-container mt-2">
-                            <empleado-component v-for="empleado in empleados" :intervalos="intervalos" :key="empleado.id" :app_tienda_id="tienda"
+                            <empleado-component v-for="empleado in empleados" :intervalos="intervalos" :key="empleado.id" :app_tienda_id="tienda" :tipo="tipo" v-on:cita_guardada="agregarCita"
                                 :empleado="empleado" :citas="getCitas(empleado, weekday.full_date)" :horario="getHorario(empleado, weekday.full_date)"
                                 :fechas="getFechas(empleado, weekday.full_date)" :dia_actual="weekday.full_date" :interval_height="slider" :type="type">
                             </empleado-component>
@@ -51,7 +51,7 @@
             </div>
         </v-col>
         <v-col cols="12" md="3">
-            <evento-component :tipo="tipo" :app_tienda_id="tienda" :isloading="isloading" v-on:eliminar_cita="deleteCita" :abrirbusqueda="abrirbusqueda()"
+            <evento-component :tipo="tipo" :app_tienda_id="tienda" :isloading="isloading" v-on:eliminar_cita="deleteCita" :abrirbusqueda="abrirbusqueda()" 
                 v-on:cita_guardada="agregarCita" :empleados="empleados" :clientes="clientes" :servicios="servicios" v-on:resetClientes="resetClientes">
             </evento-component>
         </v-col>
@@ -125,10 +125,13 @@
             falseScrollFunction(e) {
                 this.$refs.calendar_wrap.scrollLeft = e.target.scrollLeft
             },
-            getCitas(empleado, dia) {            
-                console.log(this.map_citas[`${empleado.nombre}_${dia}`])   ;
-                return this.map_citas[`${empleado.nombre}_${dia}`];
-            },            
+            getCitas(empleado, dia) {    
+                let    map = this.map_citas[`${empleado.nombre}_${dia}`];
+                if(map == null)   {
+                    map = [];
+                }    
+                return map;
+            },             
             getHorario(empleado, dia) {  
                         
                 let horario_especial = undefined   
